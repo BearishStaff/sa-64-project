@@ -26,6 +26,7 @@ func SetupDatabase() {
 		&CheckIn{},
 		&Customer{},
 		&Employee{},
+		&Room{},
 	)
 	db = database
 
@@ -63,24 +64,38 @@ func SetupDatabase() {
 	db.Raw("SELECT * FROM customers WHERE email = ?", "retriever@hotmail.com").Scan(&golden)
 	db.Raw("SELECT * FROM customers WHERE email = ?", "police_shep@hotmail.com").Scan(&shepherd)
 
+	// ===== สมมติ Room =====
+	db.Model(&Room{}).Create(&Room{
+		Location:   "4th",
+		Roomnumber: "401",
+	})
+	db.Model(&Room{}).Create(&Room{
+		Location:   "4th",
+		Roomnumber: "402",
+	})
+	var room1 Room
+	var room2 Room
+	db.Raw("SELECT * FROM rooms WHERE roomnumber = ?", "401").Scan(&room1)
+	db.Raw("SELECT * FROM rooms WHERE roomnumber = ?", "402").Scan(&room2)
+
 	// ===== สมมติ CheckIn =====
 	db.Model(&CheckIn{}).Create(&CheckIn{
 		Date_time: time.Now(),
-		Customer:  golden,
+		CheckIn:   golden, // Customer object
 		Employee:  husky,
-		Room:      "402",
+		Reserve:   room2, // Room Object
 	})
 	db.Model(&CheckIn{}).Create(&CheckIn{
 		Date_time: time.Now(),
-		Customer:  shepherd,
+		CheckIn:   shepherd, // Customer object
 		Employee:  husky,
-		Room:      "401",
+		Reserve:   room1, // Room Object
 	})
 
 	var check_in1 CheckIn
 	var check_in2 CheckIn
-	db.Raw("SELECT * FROM check_ins WHERE customer_id = ?", 1).Scan(&check_in1)
-	db.Raw("SELECT * FROM check_ins WHERE customer_id = ?", 2).Scan(&check_in2)
+	db.Raw("SELECT * FROM check_ins WHERE check_in_id = ?", 1).Scan(&check_in1)
+	db.Raw("SELECT * FROM check_ins WHERE check_in_id = ?", 2).Scan(&check_in2)
 
 	// ===== สมมติ CheckOut =====
 	db.Model(&CheckOut{}).Create(&CheckOut{

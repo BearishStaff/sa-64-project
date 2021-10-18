@@ -28,7 +28,8 @@ type CheckIn struct {
 	CheckInID *uint
 	CheckIn   Customer
 
-	Reserve Room
+	ReserveID *uint
+	Reserve   Room
 
 	PaymentID *uint
 
