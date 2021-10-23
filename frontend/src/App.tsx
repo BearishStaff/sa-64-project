@@ -107,7 +107,7 @@ export default function MiniDrawer() {
   };
 
   const menu = [
-    { name: "หน้าแรก", icon: <HomeIcon />, path: "/checkouts" },
+    { name: "หน้าแรก", icon: <HomeIcon />, path: "/" },
   ];
 
   return (
@@ -175,8 +175,8 @@ export default function MiniDrawer() {
           <div className={classes.toolbar} />
           <div>
             <Switch>
-              <Route exact path="/checkouts" component={CheckOutPage} />
-              <Route exact path="/checkouts/create" component={CheckOutForm} />
+              <Route exact path="/" component={CheckOutPage} />
+              <Route exact path="/create" component={CheckOutForm} />
             </Switch>
           </div>
         </main>

@@ -33,12 +33,19 @@ func main() {
 	r.PATCH("/customer", controller.UpdateCustomer)
 	r.DELETE("/customer/:id", controller.DeleteCustomer)
 
-	// Customer Routes
+	// Employee Routes
 	r.GET("/employee", controller.ListEmployee)
 	r.GET("/employee/:id", controller.GetEmployee)
 	r.POST("/employee", controller.CreateEmployee)
 	r.PATCH("/employee", controller.UpdateEmployee)
 	r.DELETE("/employee/:id", controller.DeleteEmployee)
+
+	// Room Routes
+	r.GET("/room", controller.ListRoom)
+	r.GET("/room/:id", controller.GetRoom)
+	r.POST("/room", controller.CreateRoom)
+	r.PATCH("/room", controller.UpdateRoom)
+	r.DELETE("/room/:id", controller.DeleteRoom)
 
 	// Run the server
 	r.Run()

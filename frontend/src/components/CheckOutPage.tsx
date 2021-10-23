@@ -32,16 +32,16 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-function WatchVideos() {
+function CheckOutPage() {
   const classes = useStyles();
-  const [watchVideos, setCheckOuts] = useState<CheckOutInterface[]>([]);
+  const [CheckOuts, setCheckOuts] = useState<CheckOutInterface[]>([]);
   const apiUrl = "http://localhost:8080";
   const requestOptions = {
     method: "GET",
     headers: { "Content-Type": "application/json" },
   };
 
-  const getWatchVideos = async () => {
+  const getCheckOuts = async () => {
     fetch(`${apiUrl}/checkouts`, requestOptions)
       .then((response) => response.json())
       .then((res) => {
@@ -55,7 +55,7 @@ function WatchVideos() {
   };
 
   useEffect(() => {
-    getWatchVideos();
+    getCheckOuts();
   }, []);
 
   return (
@@ -75,7 +75,7 @@ function WatchVideos() {
           <Box>
             <Button
               component={RouterLink}
-              to="/checkout/create"
+              to="/create"
               variant="contained"
               color="primary"
             >
@@ -105,7 +105,7 @@ function WatchVideos() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {watchVideos.map((item: CheckOutInterface) => (
+              {CheckOuts.map((item: CheckOutInterface) => (
                 <TableRow key={item.ID}>
                   <TableCell align="center">{item.ID}</TableCell>
                   <TableCell align="center">{item.CheckIn.Customer.Name}</TableCell>
@@ -122,4 +122,4 @@ function WatchVideos() {
   );
 }
 
-export default CheckOutCreate;
+export default CheckOutPage;
