@@ -22,6 +22,7 @@ import { CustomerInterface } from "../models/ICustomer";
 import { EmployeeInterface } from "../models/IEmployee";
 import { CheckInInterface } from "../models/ICheckIn";
 import { CheckOutInterface } from "../models/ICheckOut";
+import { RoomInterface } from "../models/IRoom";
 
 import {
   MuiPickersUtilsProvider,
@@ -54,6 +55,7 @@ function CheckOutCreate() {
   const [checkins, setCheckIns] = useState<CheckInInterface[]>([]);
   const [employees, setEmployees] = useState<EmployeeInterface[]>([]);
   const [customers, setCustomers] = useState<CustomerInterface[]>([]);
+  const [rooms, setRooms] = useState<RoomInterface[]>([]);
   const [checkOut, setCheckOut] = useState<Partial<CheckOutInterface>>(
     {}
   );
@@ -91,7 +93,7 @@ function CheckOutCreate() {
   };
 
   const getCheckIns = async () => {
-    fetch(`${apiUrl}/checkins`, requestOptions)
+    fetch(`${apiUrl}/check_ins`, requestOptions)
       .then((response) => response.json())
       .then((res) => {
         if (res.data) {
@@ -126,6 +128,18 @@ function CheckOutCreate() {
       });
   };
 
+  const getRooms = async () => {
+    fetch(`${apiUrl}/rooms`, requestOptions)
+      .then((response) => response.json())
+      .then((res) => {
+        if (res.data) {
+          setRooms(res.data);
+        } else {
+          console.log("else");
+        }
+      });
+  };
+
   useEffect(() => {
     getCheckIns();
     getCustomers();
@@ -151,7 +165,7 @@ function CheckOutCreate() {
       body: JSON.stringify(data),
     };
 
-    fetch(`${apiUrl}/checkouts`, requestOptionsPost)
+    fetch(`${apiUrl}/check_outs`, requestOptionsPost)
       .then((response) => response.json())
       .then((res) => {
         if (res.data) {
@@ -205,7 +219,7 @@ function CheckOutCreate() {
                 </option>
                 {checkins.map((item: CheckInInterface) => (
                   <option value={item.ID} key={item.ID}>
-                    {item.Room}
+                    {item.Room.Roomnumber}
                   </option>
                 ))}
               </Select>
@@ -273,7 +287,7 @@ function CheckOutCreate() {
           <Grid item xs={12}>
             <Button
               component={RouterLink}
-              to="/checkouts"
+              to="/"
               variant="contained"
             >
               กลับ

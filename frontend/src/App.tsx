@@ -26,6 +26,7 @@ import HomeIcon from "@material-ui/icons/Home";
 
 import CheckOutForm from "./components/CheckOutForm";
 import CheckOutPage from "./components/CheckOutPage";
+import Navbar from "./components/Navbar";
 
 const drawerWidth = 240;
 
@@ -114,6 +115,7 @@ export default function MiniDrawer() {
     <div className={classes.root}>
       <Router>
         <CssBaseline />
+        
         <AppBar
           position="fixed"
           className={clsx(classes.appBar, {

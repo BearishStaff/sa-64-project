@@ -9,14 +9,14 @@ import (
 type CheckOut struct {
 	gorm.Model
 
-	CheckInID *uint
-	CheckIn   CheckIn
+	CheckInID *uint   `gorm:"unique"`
+	CheckIn   CheckIn `gorm:"references:id"`
 
 	CustomerID *uint
-	Customer   Customer
+	Customer   Customer `gorm:"references:id"`
 
 	EmployeeID *uint
-	Employee   Employee
+	Employee   Employee `gorm:"references:id"`
 
 	CheckOutTime time.Time
 }
@@ -26,15 +26,15 @@ type CheckIn struct {
 	Date_time time.Time
 
 	CheckInID *uint
-	CheckIn   Customer
+	CheckIn   Customer `gorm:"references:id"`
 
 	ReserveID *uint
-	Reserve   Room
+	Reserve   Room `gorm:"references:id"`
 
 	PaymentID *uint
 
 	EmployeeID *uint
-	Employee   Employee
+	Employee   Employee `gorm:"references:id"`
 }
 
 type Customer struct {

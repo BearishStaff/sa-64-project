@@ -1,5 +1,6 @@
 import { CustomerInterface } from "./ICustomer";
 import { EmployeeInterface } from "./IEmployee";
+import { RoomInterface } from "./IRoom";
 
 export interface CheckInInterface {
 
@@ -9,6 +10,6 @@ export interface CheckInInterface {
 	Customer:   CustomerInterface,
 	EmployeeID: number,
 	Employee:   EmployeeInterface,
-	Room: string;
+	Room: RoomInterface;
    
    }

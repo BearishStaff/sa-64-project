@@ -16,7 +16,6 @@ import TableRow from "@material-ui/core/TableRow";
 import { CheckOutInterface } from "../models/ICheckOut";
 
 import { format } from 'date-fns'
-import CheckOutCreate from "./CheckOutForm";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -42,7 +41,7 @@ function CheckOutPage() {
   };
 
   const getCheckOuts = async () => {
-    fetch(`${apiUrl}/checkouts`, requestOptions)
+    fetch(`${apiUrl}/check_outs`, requestOptions)
       .then((response) => response.json())
       .then((res) => {
         console.log(res.data);

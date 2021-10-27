@@ -32,37 +32,44 @@ func SetupDatabase() {
 
 	// ===== สมมติ Employee =====
 	db.Model(&Employee{}).Create(&Employee{
-		Name:  "Samoyed",
+		Name:  "Waree Aaaa",
 		Tel:   "099-987-6543",
-		Email: "samoly@gmail.com",
+		Email: "aaa@gmail.com",
 	})
 	db.Model(&Employee{}).Create(&Employee{
-		Name:  "Husky",
+		Name:  "Phupha Bbbb",
 		Tel:   "02-453-3333",
-		Email: "siby@gmail.com",
+		Email: "bbb@gmail.com",
+	})
+	db.Model(&Employee{}).Create(&Employee{
+		Name:  "Napha Cccc",
+		Tel:   "088-888-8888",
+		Email: "ccc@gmail.com",
 	})
 
-	var samoyed Employee
-	var husky Employee
-	db.Raw("SELECT * FROM employees WHERE email = ?", "samoly@gmail.com").Scan(&samoyed)
-	db.Raw("SELECT * FROM employees WHERE email = ?", "siby@example.com").Scan(&husky)
+	var waree Employee
+	var phupha Employee
+	var napha Employee
+	db.Raw("SELECT * FROM employees WHERE email = ?", "aaa@gmail.com").Scan(&waree)
+	db.Raw("SELECT * FROM employees WHERE email = ?", "bbb@gmail.com").Scan(&phupha)
+	db.Raw("SELECT * FROM employees WHERE email = ?", "ccc@gmail.com").Scan(&napha)
 
 	// ===== สมมติ Customer =====
 
 	db.Model(&Customer{}).Create(&Customer{
-		Name:  "golden",
+		Name:  "Golden Dddd",
 		Tel:   "02-222-2222",
-		Email: "retriever@hotmail.com",
+		Email: "ddd@hotmail.com",
 	})
 	db.Model(&Customer{}).Create(&Customer{
-		Name:  "shepherd",
+		Name:  "Shepherd Eeee",
 		Tel:   "01-111-1111",
-		Email: "police_shep@hotmail.com",
+		Email: "eee@hotmail.com",
 	})
 	var golden Customer
 	var shepherd Customer
-	db.Raw("SELECT * FROM customers WHERE email = ?", "retriever@hotmail.com").Scan(&golden)
-	db.Raw("SELECT * FROM customers WHERE email = ?", "police_shep@hotmail.com").Scan(&shepherd)
+	db.Raw("SELECT * FROM customers WHERE email = ?", "ddd@hotmail.com").Scan(&golden)
+	db.Raw("SELECT * FROM customers WHERE email = ?", "eee@hotmail.com").Scan(&shepherd)
 
 	// ===== สมมติ Room =====
 	db.Model(&Room{}).Create(&Room{
@@ -73,6 +80,7 @@ func SetupDatabase() {
 		Location:   "4th",
 		Roomnumber: "402",
 	})
+
 	var room1 Room
 	var room2 Room
 	db.Raw("SELECT * FROM rooms WHERE roomnumber = ?", "401").Scan(&room1)
@@ -82,13 +90,13 @@ func SetupDatabase() {
 	db.Model(&CheckIn{}).Create(&CheckIn{
 		Date_time: time.Now(),
 		CheckIn:   golden, // Customer object
-		Employee:  husky,
+		Employee:  phupha,
 		Reserve:   room2, // Room Object
 	})
 	db.Model(&CheckIn{}).Create(&CheckIn{
 		Date_time: time.Now(),
 		CheckIn:   shepherd, // Customer object
-		Employee:  husky,
+		Employee:  phupha,
 		Reserve:   room1, // Room Object
 	})
 
@@ -101,13 +109,13 @@ func SetupDatabase() {
 	db.Model(&CheckOut{}).Create(&CheckOut{
 		CheckIn:      check_in1,
 		Customer:     golden,
-		Employee:     samoyed,
+		Employee:     napha,
 		CheckOutTime: time.Now(),
 	})
 	db.Model(&CheckOut{}).Create(&CheckOut{
 		CheckIn:      check_in2,
 		Customer:     golden,
-		Employee:     samoyed,
+		Employee:     waree,
 		CheckOutTime: time.Now(),
 	})
 }
