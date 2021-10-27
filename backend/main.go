@@ -13,39 +13,39 @@ func main() {
 	r.Use(CORSMiddleware())
 
 	// CheckOut Routes
-	r.GET("/checkout", controller.ListCheckOut)
-	r.GET("/checkout/:id", controller.GetCheckOut)
-	r.POST("/checkout", controller.CreateCheckOut)
-	r.PATCH("/checkout", controller.UpdateCheckOut)
-	r.DELETE("/checkout/:id", controller.DeleteCheckOut)
+	r.GET("/check_outs", controller.ListCheckOut)
+	r.GET("/check_outs/:id", controller.GetCheckOut)
+	r.POST("/check_outs", controller.CreateCheckOut)
+	r.PATCH("/check_outs", controller.UpdateCheckOut)
+	r.DELETE("/check_outs/:id", controller.DeleteCheckOut)
 
 	// CheckOut Routes
-	r.GET("/checkin", controller.ListCheckIn)
-	r.GET("/checkin/:id", controller.GetCheckIn)
-	r.POST("/checkin", controller.CreateCheckIn)
-	r.PATCH("/checkin", controller.UpdateCheckIn)
-	r.DELETE("/checkin/:id", controller.DeleteCheckIn)
+	r.GET("/check_ins", controller.ListCheckIn)
+	r.GET("/check_ins/:id", controller.GetCheckIn)
+	r.POST("/check_ins", controller.CreateCheckIn)
+	r.PATCH("/check_ins", controller.UpdateCheckIn)
+	r.DELETE("/check_ins/:id", controller.DeleteCheckIn)
 
 	// Customer Routes
-	r.GET("/customer", controller.ListCustomer)
-	r.GET("/customer/:id", controller.GetCustomer)
-	r.POST("/customer", controller.CreateCustomer)
-	r.PATCH("/customer", controller.UpdateCustomer)
-	r.DELETE("/customer/:id", controller.DeleteCustomer)
+	r.GET("/customers", controller.ListCustomer)
+	r.GET("/customers/:id", controller.GetCustomer)
+	r.POST("/customers", controller.CreateCustomer)
+	r.PATCH("/customers", controller.UpdateCustomer)
+	r.DELETE("/customers/:id", controller.DeleteCustomer)
 
 	// Employee Routes
-	r.GET("/employee", controller.ListEmployee)
-	r.GET("/employee/:id", controller.GetEmployee)
-	r.POST("/employee", controller.CreateEmployee)
-	r.PATCH("/employee", controller.UpdateEmployee)
-	r.DELETE("/employee/:id", controller.DeleteEmployee)
+	r.GET("/employees", controller.ListEmployee)
+	r.GET("/employees/:id", controller.GetEmployee)
+	r.POST("/employees", controller.CreateEmployee)
+	r.PATCH("/employees", controller.UpdateEmployee)
+	r.DELETE("/employees/:id", controller.DeleteEmployee)
 
 	// Room Routes
-	r.GET("/room", controller.ListRoom)
-	r.GET("/room/:id", controller.GetRoom)
-	r.POST("/room", controller.CreateRoom)
-	r.PATCH("/room", controller.UpdateRoom)
-	r.DELETE("/room/:id", controller.DeleteRoom)
+	r.GET("/rooms", controller.ListRoom)
+	r.GET("/rooms/:id", controller.GetRoom)
+	r.POST("/rooms", controller.CreateRoom)
+	r.PATCH("/rooms", controller.UpdateRoom)
+	r.DELETE("/rooms/:id", controller.DeleteRoom)
 
 	// Run the server
 	r.Run()

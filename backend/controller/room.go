@@ -26,7 +26,7 @@ func CreateRoom(c *gin.Context) {
 func GetRoom(c *gin.Context) {
 	var room entity.Room
 	id := c.Param("id")
-	if err := entity.DB().Preload("Owner").Raw("SELECT * FROM room WHERE id = ?", id).Find(&room).Error; err != nil {
+	if err := entity.DB().Raw("SELECT * FROM rooms WHERE id = ?", id).Find(&room).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
@@ -37,7 +37,7 @@ func GetRoom(c *gin.Context) {
 // GET /room
 func ListRoom(c *gin.Context) {
 	var room []entity.Room
-	if err := entity.DB().Preload("Owner").Raw("SELECT * FROM room").Find(&room).Error; err != nil {
+	if err := entity.DB().Raw("SELECT * FROM rooms").Find(&room).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
@@ -48,7 +48,7 @@ func ListRoom(c *gin.Context) {
 // DELETE /room/:id
 func DeleteRoom(c *gin.Context) {
 	id := c.Param("id")
-	if tx := entity.DB().Exec("DELETE FROM room WHERE id = ?", id); tx.RowsAffected == 0 {
+	if tx := entity.DB().Exec("DELETE FROM rooms WHERE id = ?", id); tx.RowsAffected == 0 {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "room not found"})
 		return
 	}

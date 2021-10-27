@@ -36,8 +36,10 @@ function CheckOutPage() {
   const [CheckOuts, setCheckOuts] = useState<CheckOutInterface[]>([]);
   const apiUrl = "http://localhost:8080";
   const requestOptions = {
-    method: "GET",
-    headers: { "Content-Type": "application/json" },
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+      "Content-Type": "application/json",
+    },
   };
 
   const getCheckOuts = async () => {
@@ -107,7 +109,7 @@ function CheckOutPage() {
               {CheckOuts.map((item: CheckOutInterface) => (
                 <TableRow key={item.ID}>
                   <TableCell align="center">{item.ID}</TableCell>
-                  <TableCell align="center">{item.CheckIn.Customer.Name}</TableCell>
+                  <TableCell align="center">{item.CheckIn.CheckIn.Name}</TableCell>
                   <TableCell align="center">{item.Customer.Name}</TableCell>
                   <TableCell align="center">{item.Employee.Name}</TableCell>
                   <TableCell align="center">{format((new Date(item.CheckOutTime)), 'dd MMMM yyyy hh:mm a')}</TableCell>

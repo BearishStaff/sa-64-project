@@ -50,9 +50,10 @@ type Customer struct {
 
 type Employee struct {
 	gorm.Model
-	Name  string
-	Tel   string
-	Email string
+	Name     string
+	Tel      string
+	Email    string
+	Password string
 
 	CheckIns []CheckIn `gorm:"foreignKey:EmployeeID"`
 	// 1 employee checkout ได้หลายครั้ง

@@ -6,10 +6,10 @@ export interface CheckInInterface {
 
     ID: number,
     Date_time:  Date,
-	CustomerID: number,
-	Customer:   CustomerInterface,
+	CheckInID: number,
+	CheckIn:   CustomerInterface,
 	EmployeeID: number,
 	Employee:   EmployeeInterface,
-	Room: RoomInterface;
-   
+	ReserveID: number,
+	Reserve: RoomInterface;
    }

@@ -26,7 +26,7 @@ func CreateCustomer(c *gin.Context) {
 func GetCustomer(c *gin.Context) {
 	var customer entity.Customer
 	id := c.Param("id")
-	if err := entity.DB().Preload("Owner").Raw("SELECT * FROM employee WHERE id = ?", id).Find(&customer).Error; err != nil {
+	if err := entity.DB().Raw("SELECT * FROM customers WHERE id = ?", id).Find(&customer).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
@@ -37,7 +37,7 @@ func GetCustomer(c *gin.Context) {
 // GET /customer
 func ListCustomer(c *gin.Context) {
 	var customer []entity.Customer
-	if err := entity.DB().Preload("Owner").Raw("SELECT * FROM customer").Find(&customer).Error; err != nil {
+	if err := entity.DB().Raw("SELECT * FROM customers").Find(&customer).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
@@ -48,7 +48,7 @@ func ListCustomer(c *gin.Context) {
 // DELETE /customer/:id
 func DeleteCustomer(c *gin.Context) {
 	id := c.Param("id")
-	if tx := entity.DB().Exec("DELETE FROM customer WHERE id = ?", id); tx.RowsAffected == 0 {
+	if tx := entity.DB().Exec("DELETE FROM customers WHERE id = ?", id); tx.RowsAffected == 0 {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "customer not found"})
 		return
 	}

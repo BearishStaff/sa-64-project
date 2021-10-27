@@ -32,19 +32,22 @@ func SetupDatabase() {
 
 	// ===== สมมติ Employee =====
 	db.Model(&Employee{}).Create(&Employee{
-		Name:  "Waree Aaaa",
-		Tel:   "099-987-6543",
-		Email: "aaa@gmail.com",
+		Name:     "Waree Aaaa",
+		Tel:      "099-987-6543",
+		Email:    "aaa@gmail.com",
+		Password: "111111",
 	})
 	db.Model(&Employee{}).Create(&Employee{
-		Name:  "Phupha Bbbb",
-		Tel:   "02-453-3333",
-		Email: "bbb@gmail.com",
+		Name:     "Phupha Bbbb",
+		Tel:      "02-453-3333",
+		Email:    "bbb@gmail.com",
+		Password: "111111",
 	})
 	db.Model(&Employee{}).Create(&Employee{
-		Name:  "Napha Cccc",
-		Tel:   "088-888-8888",
-		Email: "ccc@gmail.com",
+		Name:     "Napha Cccc",
+		Tel:      "088-888-8888",
+		Email:    "ccc@gmail.com",
+		Password: "111111",
 	})
 
 	var waree Employee
@@ -72,6 +75,14 @@ func SetupDatabase() {
 	db.Raw("SELECT * FROM customers WHERE email = ?", "eee@hotmail.com").Scan(&shepherd)
 
 	// ===== สมมติ Room =====
+	db.Model(&Room{}).Create(&Room{
+		Location:   "3th",
+		Roomnumber: "301",
+	})
+	db.Model(&Room{}).Create(&Room{
+		Location:   "3th",
+		Roomnumber: "302",
+	})
 	db.Model(&Room{}).Create(&Room{
 		Location:   "4th",
 		Roomnumber: "401",

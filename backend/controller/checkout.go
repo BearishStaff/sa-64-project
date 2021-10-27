@@ -7,12 +7,12 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// GET /checkout/:id
+// GET /check_outs/:id
 
 func GetCheckOut(c *gin.Context) {
 	var checkout entity.CheckOut
 	id := c.Param("id")
-	if err := entity.DB().Raw("SELECT * FROM checkout WHERE id = ?", id).Scan(&checkout).Error; err != nil {
+	if err := entity.DB().Preload("CheckIn").Preload("Employee").Preload("Customer").Preload("CheckIn.Room").Raw("SELECT * FROM check_outs WHERE id = ?", id).Scan(&checkout).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
@@ -23,7 +23,7 @@ func GetCheckOut(c *gin.Context) {
 
 func ListCheckOut(c *gin.Context) {
 	var checkouts []entity.CheckOut
-	if err := entity.DB().Raw("SELECT * FROM checkout").Scan(&checkouts).Error; err != nil {
+	if err := entity.DB().Preload("CheckIn").Preload("Employee").Preload("Customer").Preload("CheckIn.Room").Raw("SELECT * FROM check_outs").Scan(&checkouts).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
@@ -34,7 +34,7 @@ func ListCheckOut(c *gin.Context) {
 
 func DeleteCheckOut(c *gin.Context) {
 	id := c.Param("id")
-	if tx := entity.DB().Exec("DELETE FROM checkout WHERE id = ?", id); tx.RowsAffected == 0 {
+	if tx := entity.DB().Exec("DELETE FROM check_outs WHERE id = ?", id); tx.RowsAffected == 0 {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "this checkout not found"})
 		return
 	}
@@ -99,6 +99,7 @@ func CreateCheckOut(c *gin.Context) {
 		Customer:     customer, // โยงความสัมพันธ์กับ Entity Customer
 		Employee:     employee, // โยงความสัมพันธ์กับ Entity Employee
 		CheckOutTime: checkout.CheckOutTime,
+		Condition:    checkout.Condition,
 	}
 
 	// 13: บันทึก

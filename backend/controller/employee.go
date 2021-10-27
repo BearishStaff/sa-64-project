@@ -26,7 +26,7 @@ func CreateEmployee(c *gin.Context) {
 func GetEmployee(c *gin.Context) {
 	var employee entity.Employee
 	id := c.Param("id")
-	if err := entity.DB().Preload("Owner").Raw("SELECT * FROM employee WHERE id = ?", id).Find(&employee).Error; err != nil {
+	if err := entity.DB().Raw("SELECT * FROM employees WHERE id = ?", id).Find(&employee).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
@@ -37,7 +37,7 @@ func GetEmployee(c *gin.Context) {
 // GET /employee
 func ListEmployee(c *gin.Context) {
 	var employee []entity.Employee
-	if err := entity.DB().Preload("Owner").Raw("SELECT * FROM employee").Find(&employee).Error; err != nil {
+	if err := entity.DB().Raw("SELECT * FROM employees").Find(&employee).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
@@ -48,7 +48,7 @@ func ListEmployee(c *gin.Context) {
 // DELETE /employee/:id
 func DeleteEmployee(c *gin.Context) {
 	id := c.Param("id")
-	if tx := entity.DB().Exec("DELETE FROM employee WHERE id = ?", id); tx.RowsAffected == 0 {
+	if tx := entity.DB().Exec("DELETE FROM employees WHERE id = ?", id); tx.RowsAffected == 0 {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "employee not found"})
 		return
 	}

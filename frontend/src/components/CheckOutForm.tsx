@@ -144,6 +144,7 @@ function CheckOutCreate() {
     getCheckIns();
     getCustomers();
     getEmployees();
+    getRooms();
   }, []);
 
   const convertType = (data: string | number | undefined) => {
@@ -219,7 +220,7 @@ function CheckOutCreate() {
                 </option>
                 {checkins.map((item: CheckInInterface) => (
                   <option value={item.ID} key={item.ID}>
-                    {item.Room.Roomnumber}
+                    {item.Reserve.Roomnumber}
                   </option>
                 ))}
               </Select>
