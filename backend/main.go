@@ -19,7 +19,7 @@ func main() {
 	r.PATCH("/check_outs", controller.UpdateCheckOut)
 	r.DELETE("/check_outs/:id", controller.DeleteCheckOut)
 
-	// CheckOut Routes
+	// CheckIn Routes
 	r.GET("/check_ins", controller.ListCheckIn)
 	r.GET("/check_ins/:id", controller.GetCheckIn)
 	r.POST("/check_ins", controller.CreateCheckIn)

@@ -117,16 +117,16 @@ func SetupDatabase() {
 	db.Raw("SELECT * FROM check_ins WHERE check_in_id = ?", 2).Scan(&check_in2)
 
 	// ===== สมมติ CheckOut =====
-	db.Model(&CheckOut{}).Create(&CheckOut{
-		CheckIn:      check_in1,
-		Customer:     golden,
-		Employee:     napha,
-		CheckOutTime: time.Now(),
-	})
-	db.Model(&CheckOut{}).Create(&CheckOut{
-		CheckIn:      check_in2,
-		Customer:     golden,
-		Employee:     waree,
-		CheckOutTime: time.Now(),
-	})
+	// db.Model(&CheckOut{}).Create(&CheckOut{
+	// 	CheckIn:      check_in1,
+	// 	Customer:     golden,
+	// 	Employee:     napha,
+	// 	CheckOutTime: time.Now(),
+	// })
+	// db.Model(&CheckOut{}).Create(&CheckOut{
+	// 	CheckIn:      check_in2,
+	// 	Customer:     golden,
+	// 	Employee:     waree,
+	// 	CheckOutTime: time.Now(),
+	// })
 }

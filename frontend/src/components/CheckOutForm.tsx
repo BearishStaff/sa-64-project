@@ -1,12 +1,8 @@
 import { useEffect, useState } from "react";
 import { Link as RouterLink } from "react-router-dom";
-import {
-  makeStyles,
-  Theme,
-  createStyles,
-  alpha,
-} from "@material-ui/core/styles";
+import {makeStyles,Theme,createStyles} from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
+import TextField from "@material-ui/core/TextField";
 import FormControl from "@material-ui/core/FormControl";
 import Container from "@material-ui/core/Container";
 import Paper from "@material-ui/core/Paper";
@@ -52,10 +48,10 @@ const useStyles = makeStyles((theme: Theme) =>
 function CheckOutCreate() {
   const classes = useStyles();
   const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
-  const [checkins, setCheckIns] = useState<CheckInInterface[]>([]);
+  const [checkIns, setCheckIns] = useState<CheckInInterface>();
   const [employees, setEmployees] = useState<EmployeeInterface[]>([]);
   const [customers, setCustomers] = useState<CustomerInterface[]>([]);
-  const [rooms, setRooms] = useState<RoomInterface[]>([]);
+  //const [rooms, setRooms] = useState<RoomInterface[]>([]);
   const [checkOut, setCheckOut] = useState<Partial<CheckOutInterface>>(
     {}
   );
@@ -92,8 +88,16 @@ function CheckOutCreate() {
     setSelectedDate(date);
   };
 
+  const handleInputChange = (
+    event: React.ChangeEvent<{ id?: string; value: any }>
+  ) => {
+    const id = event.target.id as keyof typeof checkOut;
+    const { value } = event.target;
+    setCheckOut({ ...checkOut, [id]: value });
+  };
+
   const getCheckIns = async () => {
-    fetch(`${apiUrl}/check_ins`, requestOptions)
+    fetch(`${apiUrl}/check_ins/${Number(4)}`, requestOptions)
       .then((response) => response.json())
       .then((res) => {
         if (res.data) {
@@ -128,23 +132,10 @@ function CheckOutCreate() {
       });
   };
 
-  const getRooms = async () => {
-    fetch(`${apiUrl}/rooms`, requestOptions)
-      .then((response) => response.json())
-      .then((res) => {
-        if (res.data) {
-          setRooms(res.data);
-        } else {
-          console.log("else");
-        }
-      });
-  };
-
   useEffect(() => {
     getCheckIns();
     getCustomers();
     getEmployees();
-    getRooms();
   }, []);
 
   const convertType = (data: string | number | undefined) => {
@@ -154,10 +145,11 @@ function CheckOutCreate() {
 
   function submit() {
     let data = {
-      CheckInID: convertType(checkOut.CheckInID),
+      CheckInID: convertType(checkIns?.ID),
       CustomerID: convertType(checkOut.CustomerID),
       EmployeeID: convertType(checkOut.EmployeeID),
       CheckOutTime: selectedDate,
+      Condition: checkOut.Condition ?? "",
     };
 
     const requestOptionsPost = {
@@ -177,6 +169,7 @@ function CheckOutCreate() {
       });
   }
 
+  console.log(checkIns)
   return (
     <Container className={classes.container} maxWidth="md">
       <Snackbar open={success} autoHideDuration={6000} onClose={handleClose}>
@@ -209,23 +202,21 @@ function CheckOutCreate() {
               <p>Room:</p>
               <Select
                 native
-                value={checkOut.CheckInID}
-                onChange={handleChange}
-                inputProps={{
-                  name: "CheckInID",
-                }}
+                disabled
+                defaultValue=""
+                value={checkOut?.CheckIn?.Reserve.Roomnumber}
+                // onChange={handleChange}
+                // inputProps={{
+                // name: "CheckIn.Reserve.Roomnumber",
+                // }}
               >
                 <option aria-label="None" value="">
-                  กรุณาเลือกห้อง
+                {checkIns?.Reserve.Roomnumber}
                 </option>
-                {checkins.map((item: CheckInInterface) => (
-                  <option value={item.ID} key={item.ID}>
-                    {item.Reserve.Roomnumber}
-                  </option>
-                ))}
               </Select>
             </FormControl>
           </Grid>
+
           <Grid item xs={6}>
             <FormControl fullWidth variant="outlined">
               <p>Customer Name:</p>
@@ -285,6 +276,22 @@ function CheckOutCreate() {
               </MuiPickersUtilsProvider>
             </FormControl>
           </Grid>
+
+          <Grid item xs={6}>
+            <FormControl fullWidth variant="outlined">
+              <p>ความเรียบร้อย</p>
+              <TextField
+                id="Condition"
+                variant="outlined"
+                type="string"
+                size="medium"
+                placeholder="มีความเสียหายหรือไม่"
+                value={checkOut.Condition || ""}
+                onChange={handleInputChange}
+              />
+            </FormControl>
+          </Grid>
+
           <Grid item xs={12}>
             <Button
               component={RouterLink}
