@@ -19,6 +19,7 @@ type CheckOut struct {
 	Employee   Employee `gorm:"references:id"`
 
 	CheckOutTime time.Time
+	Condition    string
 }
 
 type CheckIn struct {

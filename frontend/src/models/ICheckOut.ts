@@ -15,6 +15,7 @@ export interface CheckOutInterface {
     CheckInID: number,
     CheckIn: CheckInInterface,
 
-    CheckOutTime: Date;
+    CheckOutTime: Date,
+    Condition: String;
    
    }
