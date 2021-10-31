@@ -135,7 +135,7 @@ export default function MiniDrawer() {
               <MenuIcon />
             </IconButton>
             <Typography variant="h6" noWrap>
-              Hotel System
+              Check-Out
             </Typography>
           </Toolbar>
         </AppBar>

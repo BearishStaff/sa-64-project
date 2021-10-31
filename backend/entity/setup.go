@@ -3,6 +3,7 @@ package entity
 import (
 	"time"
 
+	"golang.org/x/crypto/bcrypt"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
@@ -31,23 +32,25 @@ func SetupDatabase() {
 	db = database
 
 	// ===== สมมติ Employee =====
+	password, err := bcrypt.GenerateFromPassword([]byte("111111"), 14)
+
 	db.Model(&Employee{}).Create(&Employee{
 		Name:     "Waree Aaaa",
 		Tel:      "099-987-6543",
 		Email:    "aaa@gmail.com",
-		Password: "111111",
+		Password: string(password),
 	})
 	db.Model(&Employee{}).Create(&Employee{
 		Name:     "Phupha Bbbb",
 		Tel:      "02-453-3333",
 		Email:    "bbb@gmail.com",
-		Password: "111111",
+		Password: string(password),
 	})
 	db.Model(&Employee{}).Create(&Employee{
 		Name:     "Napha Cccc",
 		Tel:      "088-888-8888",
 		Email:    "ccc@gmail.com",
-		Password: "111111",
+		Password: string(password),
 	})
 
 	var waree Employee
@@ -60,14 +63,16 @@ func SetupDatabase() {
 	// ===== สมมติ Customer =====
 
 	db.Model(&Customer{}).Create(&Customer{
-		Name:  "Golden Dddd",
-		Tel:   "02-222-2222",
-		Email: "ddd@hotmail.com",
+		Name:     "Golden Dddd",
+		Tel:      "02-222-2222",
+		Email:    "ddd@hotmail.com",
+		Password: string(password),
 	})
 	db.Model(&Customer{}).Create(&Customer{
-		Name:  "Shepherd Eeee",
-		Tel:   "01-111-1111",
-		Email: "eee@hotmail.com",
+		Name:     "Shepherd Eeee",
+		Tel:      "01-111-1111",
+		Email:    "eee@hotmail.com",
+		Password: string(password),
 	})
 	var golden Customer
 	var shepherd Customer

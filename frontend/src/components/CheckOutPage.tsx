@@ -92,7 +92,7 @@ function CheckOutPage() {
                   ลำดับ
                 </TableCell>
                 <TableCell align="center" width="20%">
-                  ผู้ Check-in
+                  Room
                 </TableCell>
                 <TableCell align="center" width="20%">
                   ผุ้ Check-out
@@ -109,7 +109,7 @@ function CheckOutPage() {
               {CheckOuts.map((item: CheckOutInterface) => (
                 <TableRow key={item.ID}>
                   <TableCell align="center">{item.ID}</TableCell>
-                  <TableCell align="center">{item.CheckIn.CheckIn.Name}</TableCell>
+                  <TableCell align="center">{item.CheckIn.Reserve.Roomnumber}</TableCell>
                   <TableCell align="center">{item.Customer.Name}</TableCell>
                   <TableCell align="center">{item.Employee.Name}</TableCell>
                   <TableCell align="center">{format((new Date(item.CheckOutTime)), 'dd MMMM yyyy hh:mm a')}</TableCell>

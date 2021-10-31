@@ -37,13 +37,16 @@ type CheckIn struct {
 
 	EmployeeID *uint
 	Employee   Employee `gorm:"references:id"`
+
+	CheckOut []CheckOut `gorm:"foreignKey:CheckInID"`
 }
 
 type Customer struct {
 	gorm.Model
-	Name  string
-	Tel   string
-	Email string
+	Name     string
+	Tel      string
+	Email    string `gorm:"unique"`
+	Password string
 
 	// 1 customer มีได้หลาย checkOut
 	CheckOuts []CheckOut `gorm:"foreignKey:CustomerID"`
@@ -53,7 +56,7 @@ type Employee struct {
 	gorm.Model
 	Name     string
 	Tel      string
-	Email    string
+	Email    string `gorm:"unique"`
 	Password string
 
 	CheckIns []CheckIn `gorm:"foreignKey:EmployeeID"`

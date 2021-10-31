@@ -48,10 +48,9 @@ const useStyles = makeStyles((theme: Theme) =>
 function CheckOutCreate() {
   const classes = useStyles();
   const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
-  const [checkIns, setCheckIns] = useState<CheckInInterface>();
+  const [checkIns, setCheckIns] = useState<CheckInInterface[]>([]);
   const [employees, setEmployees] = useState<EmployeeInterface[]>([]);
   const [customers, setCustomers] = useState<CustomerInterface[]>([]);
-  //const [rooms, setRooms] = useState<RoomInterface[]>([]);
   const [checkOut, setCheckOut] = useState<Partial<CheckOutInterface>>(
     {}
   );
@@ -97,7 +96,7 @@ function CheckOutCreate() {
   };
 
   const getCheckIns = async () => {
-    fetch(`${apiUrl}/check_ins/${Number(4)}`, requestOptions)
+    fetch(`${apiUrl}/check_ins`, requestOptions)
       .then((response) => response.json())
       .then((res) => {
         if (res.data) {
@@ -145,7 +144,7 @@ function CheckOutCreate() {
 
   function submit() {
     let data = {
-      CheckInID: convertType(checkIns?.ID),
+      CheckInID: convertType(checkOut.CheckInID),
       CustomerID: convertType(checkOut.CustomerID),
       EmployeeID: convertType(checkOut.EmployeeID),
       CheckOutTime: selectedDate,
@@ -202,17 +201,20 @@ function CheckOutCreate() {
               <p>Room:</p>
               <Select
                 native
-                disabled
-                defaultValue=""
-                value={checkOut?.CheckIn?.Reserve.Roomnumber}
-                // onChange={handleChange}
-                // inputProps={{
-                // name: "CheckIn.Reserve.Roomnumber",
-                // }}
+                value={checkOut.CheckInID}
+                onChange={handleChange}
+                inputProps={{
+                name: "CheckInID",
+                }}
               >
                 <option aria-label="None" value="">
-                {checkIns?.Reserve.Roomnumber}
+                  กรอกห้อง
                 </option>
+                {checkIns.map((item: CheckInInterface) => (
+                  <option value={item.ID} key={item.ID}>
+                    {item.Reserve.Roomnumber}
+                  </option>
+                ))}
               </Select>
             </FormControl>
           </Grid>
