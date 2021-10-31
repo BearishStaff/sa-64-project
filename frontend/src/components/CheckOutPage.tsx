@@ -109,7 +109,7 @@ function CheckOutPage() {
               {CheckOuts.map((item: CheckOutInterface) => (
                 <TableRow key={item.ID}>
                   <TableCell align="center">{item.ID}</TableCell>
-                  <TableCell align="center">{item.CheckIn.Reserve.Roomnumber}</TableCell>
+                  <TableCell align="center">{item.CheckIn.Room.Roomnumber}</TableCell>
                   <TableCell align="center">{item.Customer.Name}</TableCell>
                   <TableCell align="center">{item.Employee.Name}</TableCell>
                   <TableCell align="center">{format((new Date(item.CheckOutTime)), 'dd MMMM yyyy hh:mm a')}</TableCell>

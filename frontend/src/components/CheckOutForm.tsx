@@ -51,6 +51,7 @@ function CheckOutCreate() {
   const [checkIns, setCheckIns] = useState<CheckInInterface[]>([]);
   const [employees, setEmployees] = useState<EmployeeInterface[]>([]);
   const [customers, setCustomers] = useState<CustomerInterface[]>([]);
+  const [rooms, setRooms] = useState<RoomInterface[]>([]);
   const [checkOut, setCheckOut] = useState<Partial<CheckOutInterface>>(
     {}
   );
@@ -131,10 +132,23 @@ function CheckOutCreate() {
       });
   };
 
+  const getRooms = async () => {
+    fetch(`${apiUrl}/rooms`, requestOptions)
+      .then((response) => response.json())
+      .then((res) => {
+        if (res.data) {
+          setRooms(res.data);
+        } else {
+          console.log("else");
+        }
+      });
+  };
+
   useEffect(() => {
     getCheckIns();
     getCustomers();
     getEmployees();
+    getRooms();
   }, []);
 
   const convertType = (data: string | number | undefined) => {
@@ -212,7 +226,7 @@ function CheckOutCreate() {
                 </option>
                 {checkIns.map((item: CheckInInterface) => (
                   <option value={item.ID} key={item.ID}>
-                    {item.Reserve.Roomnumber}
+                    {item.Room.Roomnumber}
                   </option>
                 ))}
               </Select>

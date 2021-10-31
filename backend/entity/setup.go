@@ -105,15 +105,15 @@ func SetupDatabase() {
 	// ===== สมมติ CheckIn =====
 	db.Model(&CheckIn{}).Create(&CheckIn{
 		Date_time: time.Now(),
-		CheckIn:   golden, // Customer object
+		Customer:  golden, // Customer object
 		Employee:  phupha,
-		Reserve:   room2, // Room Object
+		Room:      room2, // Room Object
 	})
 	db.Model(&CheckIn{}).Create(&CheckIn{
 		Date_time: time.Now(),
-		CheckIn:   shepherd, // Customer object
+		Customer:  shepherd, // Customer object
 		Employee:  phupha,
-		Reserve:   room1, // Room Object
+		Room:      room1, // Room Object
 	})
 
 	var check_in1 CheckIn
@@ -121,17 +121,4 @@ func SetupDatabase() {
 	db.Raw("SELECT * FROM check_ins WHERE check_in_id = ?", 1).Scan(&check_in1)
 	db.Raw("SELECT * FROM check_ins WHERE check_in_id = ?", 2).Scan(&check_in2)
 
-	// ===== สมมติ CheckOut =====
-	// db.Model(&CheckOut{}).Create(&CheckOut{
-	// 	CheckIn:      check_in1,
-	// 	Customer:     golden,
-	// 	Employee:     napha,
-	// 	CheckOutTime: time.Now(),
-	// })
-	// db.Model(&CheckOut{}).Create(&CheckOut{
-	// 	CheckIn:      check_in2,
-	// 	Customer:     golden,
-	// 	Employee:     waree,
-	// 	CheckOutTime: time.Now(),
-	// })
 }

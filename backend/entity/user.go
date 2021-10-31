@@ -27,11 +27,11 @@ type CheckIn struct {
 	gorm.Model
 	Date_time time.Time
 
-	CheckInID *uint
-	CheckIn   Customer `gorm:"references:id"`
+	CustomerID *uint
+	Customer   Customer `gorm:"references:id"`
 
-	ReserveID *uint
-	Reserve   Room `gorm:"references:id"`
+	RoomID *uint
+	Room   Room `gorm:"references:id"`
 
 	PaymentID *uint
 
@@ -50,6 +50,7 @@ type Customer struct {
 
 	// 1 customer มีได้หลาย checkOut
 	CheckOuts []CheckOut `gorm:"foreignKey:CustomerID"`
+	CheckIns  []CheckIn  `gorm:"foreignKey:CustomerID"`
 }
 
 type Employee struct {
@@ -68,5 +69,5 @@ type Room struct {
 	gorm.Model
 	Location   string
 	Roomnumber string
-	Records    []CheckIn `gorm:"foreignKey:ReserveID"`
+	Records    []CheckIn `gorm:"foreignKey:RoomID"`
 }

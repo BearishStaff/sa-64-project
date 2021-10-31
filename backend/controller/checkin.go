@@ -26,7 +26,7 @@ func CreateCheckIn(c *gin.Context) {
 func GetCheckIn(c *gin.Context) {
 	var checkin entity.CheckIn
 	id := c.Param("id")
-	if err := entity.DB().Preload("Reserve").Preload("Employee").Preload("CheckIn").Raw("SELECT * FROM check_ins WHERE reserve_id = ?", id).Find(&checkin).Error; err != nil {
+	if err := entity.DB().Preload("Room").Preload("Employee").Preload("Customer").Raw("SELECT * FROM check_ins WHERE reserve_id = ?", id).Find(&checkin).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
@@ -37,7 +37,7 @@ func GetCheckIn(c *gin.Context) {
 // GET /checkin
 func ListCheckIn(c *gin.Context) {
 	var checkin []entity.CheckIn
-	if err := entity.DB().Preload("Reserve").Preload("Employee").Preload("CheckIn").Raw("SELECT * FROM check_ins").Find(&checkin).Error; err != nil {
+	if err := entity.DB().Preload("Room").Preload("Employee").Preload("Customer").Raw("SELECT * FROM check_ins").Find(&checkin).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}

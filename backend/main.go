@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/BearishStaff/sa-64-example/controller"
 	"github.com/BearishStaff/sa-64-example/entity"
+	"github.com/BearishStaff/sa-64-example/middlewares"
 	"github.com/gin-gonic/gin"
 )
 
@@ -12,42 +13,50 @@ func main() {
 	r := gin.Default()
 	r.Use(CORSMiddleware())
 
-	// CheckOut Routes
-	r.GET("/check_outs", controller.ListCheckOut)
-	r.GET("/check_outs/:id", controller.GetCheckOut)
-	r.POST("/check_outs", controller.CreateCheckOut)
-	r.PATCH("/check_outs", controller.UpdateCheckOut)
-	r.DELETE("/check_outs/:id", controller.DeleteCheckOut)
+	api := r.Group("")
+	{
+		protected := api.Use(middlewares.Authorizes())
+		{
+			// CheckOut Routes
+			protected.GET("/check_outs", controller.ListCheckOut)
+			protected.GET("/check_outs/:id", controller.GetCheckOut)
+			protected.POST("/check_outs", controller.CreateCheckOut)
+			protected.PATCH("/check_outs", controller.UpdateCheckOut)
+			protected.DELETE("/check_outs/:id", controller.DeleteCheckOut)
 
-	// CheckIn Routes
-	r.GET("/check_ins", controller.ListCheckIn)
-	r.GET("/check_ins/:id", controller.GetCheckIn)
-	r.POST("/check_ins", controller.CreateCheckIn)
-	r.PATCH("/check_ins", controller.UpdateCheckIn)
-	r.DELETE("/check_ins/:id", controller.DeleteCheckIn)
+			// CheckIn Routes
+			protected.GET("/check_ins", controller.ListCheckIn)
+			protected.GET("/check_ins/:id", controller.GetCheckIn)
+			protected.POST("/check_ins", controller.CreateCheckIn)
+			protected.PATCH("/check_ins", controller.UpdateCheckIn)
+			protected.DELETE("/check_ins/:id", controller.DeleteCheckIn)
 
-	// Customer Routes
-	r.GET("/customers", controller.ListCustomer)
-	r.GET("/customers/:id", controller.GetCustomer)
-	r.POST("/customers", controller.CreateCustomer)
-	r.PATCH("/customers", controller.UpdateCustomer)
-	r.DELETE("/customers/:id", controller.DeleteCustomer)
+			// Customer Routes
+			protected.GET("/customers", controller.ListCustomer)
+			protected.GET("/customers/:id", controller.GetCustomer)
+			protected.POST("/customers", controller.CreateCustomer)
+			protected.PATCH("/customers", controller.UpdateCustomer)
+			protected.DELETE("/customers/:id", controller.DeleteCustomer)
 
-	// Employee Routes
-	r.GET("/employees", controller.ListEmployee)
-	r.GET("/employees/:id", controller.GetEmployee)
-	r.POST("/employees", controller.CreateEmployee)
-	r.PATCH("/employees", controller.UpdateEmployee)
-	r.DELETE("/employees/:id", controller.DeleteEmployee)
+			// Employee Routes
+			protected.GET("/employees", controller.ListEmployee)
+			protected.GET("/employees/:id", controller.GetEmployee)
+			protected.POST("/employees", controller.CreateEmployee)
+			protected.PATCH("/employees", controller.UpdateEmployee)
+			protected.DELETE("/employees/:id", controller.DeleteEmployee)
 
-	// Room Routes
-	r.GET("/rooms", controller.ListRoom)
-	r.GET("/rooms/:id", controller.GetRoom)
-	r.POST("/rooms", controller.CreateRoom)
-	r.PATCH("/rooms", controller.UpdateRoom)
-	r.DELETE("/rooms/:id", controller.DeleteRoom)
+			// Room Routes
+			protected.GET("/rooms", controller.ListRoom)
+			protected.GET("/rooms/:id", controller.GetRoom)
+			protected.POST("/rooms", controller.CreateRoom)
+			protected.PATCH("/rooms", controller.UpdateRoom)
+			protected.DELETE("/rooms/:id", controller.DeleteRoom)
+		}
+	}
 
+	r.POST("/login", controller.Login)
 	// Run the server
+
 	r.Run()
 
 }
@@ -58,6 +67,7 @@ func CORSMiddleware() gin.HandlerFunc {
 		c.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
 		c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With")
 		c.Writer.Header().Set("Access-Control-Allow-Methods", "POST, OPTIONS, GET, PUT")
+
 		if c.Request.Method == "OPTIONS" {
 			c.AbortWithStatus(204)
 			return
