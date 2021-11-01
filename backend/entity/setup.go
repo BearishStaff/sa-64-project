@@ -99,8 +99,12 @@ func SetupDatabase() {
 
 	var room1 Room
 	var room2 Room
+	var room3 Room
+	var room4 Room
 	db.Raw("SELECT * FROM rooms WHERE roomnumber = ?", "401").Scan(&room1)
 	db.Raw("SELECT * FROM rooms WHERE roomnumber = ?", "402").Scan(&room2)
+	db.Raw("SELECT * FROM rooms WHERE roomnumber = ?", "301").Scan(&room3)
+	db.Raw("SELECT * FROM rooms WHERE roomnumber = ?", "302").Scan(&room4)
 
 	// ===== สมมติ CheckIn =====
 	db.Model(&CheckIn{}).Create(&CheckIn{
@@ -115,10 +119,43 @@ func SetupDatabase() {
 		Employee:  phupha,
 		Room:      room1, // Room Object
 	})
+	db.Model(&CheckIn{}).Create(&CheckIn{
+		Date_time: time.Now(),
+		Customer:  shepherd, // Customer object
+		Employee:  phupha,
+		Room:      room3, // Room Object
+	})
+	db.Model(&CheckIn{}).Create(&CheckIn{
+		Date_time: time.Now(),
+		Customer:  golden, // Customer object
+		Employee:  phupha,
+		Room:      room3, // Room Object
+	})
+	db.Model(&CheckIn{}).Create(&CheckIn{
+		Date_time: time.Now(),
+		Customer:  golden, // Customer object
+		Employee:  phupha,
+		Room:      room4, // Room Object
+	})
 
 	var check_in1 CheckIn
 	var check_in2 CheckIn
-	db.Raw("SELECT * FROM check_ins WHERE check_in_id = ?", 1).Scan(&check_in1)
-	db.Raw("SELECT * FROM check_ins WHERE check_in_id = ?", 2).Scan(&check_in2)
+	db.Raw("SELECT * FROM check_ins WHERE id = ?", 1).Scan(&check_in1)
+	db.Raw("SELECT * FROM check_ins WHERE id = ?", 2).Scan(&check_in2)
+
+	db.Model(&CheckOut{}).Create(&CheckOut{
+		CheckOutTime: time.Now(),
+		Customer:     golden,
+		Employee:     phupha,
+		CheckIn:      check_in1,
+		Condition:    "No damage",
+	})
+	db.Model(&CheckOut{}).Create(&CheckOut{
+		CheckOutTime: time.Now(),
+		Customer:     golden,
+		Employee:     phupha,
+		CheckIn:      check_in2,
+		Condition:    "No damage",
+	})
 
 }

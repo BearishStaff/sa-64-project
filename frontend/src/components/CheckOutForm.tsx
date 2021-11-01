@@ -106,7 +106,7 @@ function CheckOutCreate() {
   };
 
   const getCheckIns = async () => {
-    fetch(`${apiUrl}/check_ins`, requestOptions)
+    fetch(`${apiUrl}/check_ins/room`, requestOptions)
       .then((response) => response.json())
       .then((res) => {
         if (res.data) {

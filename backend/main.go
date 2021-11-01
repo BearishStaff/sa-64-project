@@ -26,6 +26,7 @@ func main() {
 
 			// CheckIn Routes
 			protected.GET("/check_ins", controller.ListCheckIn)
+			protected.GET("/check_ins/room", controller.ListCheckInRoom)
 			protected.GET("/check_ins/:id", controller.GetCheckIn)
 			protected.POST("/check_ins", controller.CreateCheckIn)
 			protected.PATCH("/check_ins", controller.UpdateCheckIn)
