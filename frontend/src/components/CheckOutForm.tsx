@@ -1,6 +1,11 @@
 import { useEffect, useState } from "react";
 import { Link as RouterLink } from "react-router-dom";
-import {makeStyles,Theme,createStyles} from "@material-ui/core/styles";
+import {
+  makeStyles,
+  Theme,
+  createStyles,
+  alpha,
+} from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import FormControl from "@material-ui/core/FormControl";
@@ -13,6 +18,7 @@ import Divider from "@material-ui/core/Divider";
 import Snackbar from "@material-ui/core/Snackbar";
 import Select from "@material-ui/core/Select";
 import MuiAlert, { AlertProps } from "@material-ui/lab/Alert";
+
 
 import { CustomerInterface } from "../models/ICustomer";
 import { EmployeeInterface } from "../models/IEmployee";
@@ -62,7 +68,10 @@ function CheckOutCreate() {
   const apiUrl = "http://localhost:8080";
   const requestOptions = {
     method: "GET",
-    headers: { "Content-Type": "application/json" },
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+      "Content-Type": "application/json",
+  },
   };
 
   const handleClose = (event?: React.SyntheticEvent, reason?: string) => {
@@ -165,9 +174,14 @@ function CheckOutCreate() {
       Condition: checkOut.Condition ?? "",
     };
 
+    console.log(data)
+
     const requestOptionsPost = {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+        "Content-Type": "application/json",
+      },
       body: JSON.stringify(data),
     };
 
@@ -182,7 +196,10 @@ function CheckOutCreate() {
       });
   }
 
-  console.log(checkIns)
+  // console.log(checkIns)
+  // console.log(customers)
+  // console.log(employees)
+
   return (
     <Container className={classes.container} maxWidth="md">
       <Snackbar open={success} autoHideDuration={6000} onClose={handleClose}>
@@ -217,9 +234,7 @@ function CheckOutCreate() {
                 native
                 value={checkOut.CheckInID}
                 onChange={handleChange}
-                inputProps={{
-                name: "CheckInID",
-                }}
+                inputProps={{name: "CheckInID",}}
               >
                 <option aria-label="None" value="">
                   กรอกห้อง

@@ -45,6 +45,17 @@ func ListCheckIn(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"data": checkin})
 }
 
+// GET /checkin/room:
+func ListCheckInRoom(c *gin.Context) {
+	var checkin []entity.CheckIn
+	if err := entity.DB().Preload("Room").Preload("Employee").Preload("Customer").Raw("SELECT * FROM check_ins WHERE ....").Find(&checkin).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"data": checkin})
+}
+
 // DELETE /checkin/:id
 func DeleteCheckIn(c *gin.Context) {
 	id := c.Param("id")
