@@ -120,8 +120,7 @@ export default function MiniDrawer() {
 
   const menu = [
     { name: "หน้าแรก", icon: <HomeIcon />, path: "/" },
-    { name: "สมาชิก", icon: <AccountCircleIcon />, path: "/users" },
-    { name: "การเข้าชมวีดีโอ", icon: <YouTubeIcon />, path: "/watch_videos" },
+    { name: "สมาชิก", icon: <AccountCircleIcon />, path: "/create" },
   ];
 
   useEffect(() => {

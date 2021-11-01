@@ -60,7 +60,7 @@ func CreateCheckOut(c *gin.Context) {
 func GetCheckOut(c *gin.Context) {
 	var checkout entity.CheckOut
 	id := c.Param("id")
-	if err := entity.DB().Preload("CheckIn").Preload("Employee").Preload("Customer").Raw("SELECT * FROM check_outs WHERE id = ?", id).Scan(&checkout).Error; err != nil {
+	if err := entity.DB().Preload("CheckIn").Preload("Employee").Preload("Customer").Preload("CheckIn.Room").Raw("SELECT * FROM check_outs WHERE id = ?", id).Scan(&checkout).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
@@ -71,7 +71,7 @@ func GetCheckOut(c *gin.Context) {
 
 func ListCheckOut(c *gin.Context) {
 	var checkouts []entity.CheckOut
-	if err := entity.DB().Preload("CheckIn").Preload("Employee").Preload("Customer").Raw("SELECT * FROM check_outs").Scan(&checkouts).Error; err != nil {
+	if err := entity.DB().Preload("CheckIn").Preload("Employee").Preload("Customer").Preload("CheckIn.Room").Raw("SELECT * FROM check_outs").Find(&checkouts).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}

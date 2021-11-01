@@ -36,6 +36,7 @@ function CheckOutPage() {
   const [CheckOuts, setCheckOuts] = useState<CheckOutInterface[]>([]);
   const apiUrl = "http://localhost:8080";
   const requestOptions = {
+    method: "GET",
     headers: {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
       "Content-Type": "application/json",
