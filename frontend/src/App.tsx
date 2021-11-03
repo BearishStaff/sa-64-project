@@ -119,8 +119,8 @@ export default function MiniDrawer() {
   };
 
   const menu = [
-    { name: "หน้าแรก", icon: <HomeIcon />, path: "/" },
-    { name: "สมาชิก", icon: <AccountCircleIcon />, path: "/create" },
+    { name: "Home", icon: <HomeIcon />, path: "/" },
+    { name: "CheckOut Form", icon: <AccountCircleIcon />, path: "/create" },
   ];
 
   useEffect(() => {
@@ -214,6 +214,7 @@ export default function MiniDrawer() {
             <Switch>
               <Route exact path="/" component={CheckOutPage} />
               <Route exact path="/create" component={CheckOutForm} />
+              <Route exact path="/login" component={SignIn} />
             </Switch>
           </div>
         </main>
