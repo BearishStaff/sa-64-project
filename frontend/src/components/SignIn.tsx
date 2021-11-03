@@ -100,7 +100,7 @@ function SignIn() {
           Sign in
 
         </Typography>
-        *username:aaa@gmail.com, password:111111*
+        *username:bbb@gmail.com, password:123456*
         <form className={classes.form} noValidate>
           <TextField
             variant="outlined"

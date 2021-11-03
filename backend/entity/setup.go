@@ -11,151 +11,445 @@ import (
 var db *gorm.DB
 
 func DB() *gorm.DB {
+
 	return db
+
 }
 
 func SetupDatabase() {
-	database, err := gorm.Open(sqlite.Open("sa-64.db"), &gorm.Config{})
+
+	database, err := gorm.Open(sqlite.Open("sapro.db"), &gorm.Config{})
+
 	if err != nil {
+
 		panic("failed to connect database")
+
 	}
 
 	// Migrate the schema
 
 	database.AutoMigrate(
-		&CheckOut{},
 		&CheckIn{},
 		&Customer{},
 		&Employee{},
+		&RoomPayment{},
 		&Room{},
+		&CheckOut{},
+		&Payment{},
+		&Reservation{},
+		&Equipment{},
+		&Problem{},
+		&Urgency{},
+		&RepairInformation{},
+		&Balance{},
+		&RoomType{},
+		&Status{},
 	)
+
 	db = database
+	password, err := bcrypt.GenerateFromPassword([]byte("123456"), 14)
 
-	// ===== สมมติ Employee =====
-	password, err := bcrypt.GenerateFromPassword([]byte("111111"), 14)
-
+	//employee
 	db.Model(&Employee{}).Create(&Employee{
-		Name:     "Waree Aaaa",
-		Tel:      "099-987-6543",
-		Email:    "aaa@gmail.com",
+		Name:     "นางสาวพร มณีวรรณ",
+		Email:    "porn@gmail.com",
+		Tel:      "0883322456",
+		Password: string(password),
+	})
+	db.Model(&Employee{}).Create(&Employee{
+		Name:     "นายสม จันทร์เพ็ญ",
+		Email:    "som@gmail.com",
+		Tel:      "0885548900",
+		Password: string(password),
+	})
+	db.Model(&Employee{}).Create(&Employee{
+		Name:     "นางสาวกล้วย ไชยวาที",
+		Email:    "naruemon@gmail.com",
+		Tel:      "0610091572",
 		Password: string(password),
 	})
 	db.Model(&Employee{}).Create(&Employee{
 		Name:     "Phupha Bbbb",
-		Tel:      "02-453-3333",
 		Email:    "bbb@gmail.com",
-		Password: string(password),
-	})
-	db.Model(&Employee{}).Create(&Employee{
-		Name:     "Napha Cccc",
-		Tel:      "088-888-8888",
-		Email:    "ccc@gmail.com",
-		Password: string(password),
+		Tel:      "0945333333",
+		Password: string(password), // password change
 	})
 
-	var waree Employee
-	var phupha Employee
-	var napha Employee
-	db.Raw("SELECT * FROM employees WHERE email = ?", "aaa@gmail.com").Scan(&waree)
-	db.Raw("SELECT * FROM employees WHERE email = ?", "bbb@gmail.com").Scan(&phupha)
-	db.Raw("SELECT * FROM employees WHERE email = ?", "ccc@gmail.com").Scan(&napha)
+	var porn Employee
+	var som Employee
+	var kluy Employee
+	var Phupha Employee
 
-	// ===== สมมติ Customer =====
+	db.Raw("SELECT * FROM employees WHERE email = ?", "porn@gmail.com").Scan(&porn)
+	db.Raw("SELECT * FROM employees WHERE email = ?", "som@gmail.com").Scan(&som)
+	db.Raw("SELECT * FROM employees WHERE email = ?", "naruemon@gmail.com").Scan(&kluy)
+	db.Raw("SELECT * FROM employees WHERE email = ?", "bbb@gmail.com").Scan(&Phupha)
 
-	db.Model(&Customer{}).Create(&Customer{
-		Name:     "Golden Dddd",
-		Tel:      "02-222-2222",
-		Email:    "ddd@hotmail.com",
+	// Customer Data
+	C1 := Customer{
+		Name:     "นายแซม  พูลสวัสดิ์",
+		Email:    "b6100124@g.sut.ac.th",
+		Tel:      "0983322403",
 		Password: string(password),
-	})
-	db.Model(&Customer{}).Create(&Customer{
-		Name:     "Shepherd Eeee",
-		Tel:      "01-111-1111",
-		Email:    "eee@hotmail.com",
-		Password: string(password),
-	})
-	var golden Customer
-	var shepherd Customer
-	db.Raw("SELECT * FROM customers WHERE email = ?", "ddd@hotmail.com").Scan(&golden)
-	db.Raw("SELECT * FROM customers WHERE email = ?", "eee@hotmail.com").Scan(&shepherd)
+	}
+	db.Model(&Customer{}).Create(&C1)
 
-	// ===== สมมติ Room =====
-	db.Model(&Room{}).Create(&Room{
-		Location:   "3th",
+	C2 := Customer{
+		Name:     "นายเบนซ์ ปักโคทานัง",
+		Email:    "Tanapol@gmail.com",
+		Tel:      "0673322403",
+		Password: string(password),
+	}
+	db.Model(&Customer{}).Create(&C2)
+
+	C3 := Customer{
+		Name:     "นายหยกชาย พงศธร",
+		Email:    "name@example.com",
+		Tel:      "0953322883",
+		Password: string(password),
+	}
+	db.Model(&Customer{}).Create(&C3)
+
+	var sam Customer
+	var benz Customer
+	var yok Customer
+	db.Raw("SELECT * FROM customers WHERE email = ?", "b6100124@g.sut.ac.th").Scan(&sam)
+	db.Raw("SELECT * FROM customers WHERE email = ?", "Tanapol@gmail.com").Scan(&benz)
+	db.Raw("SELECT * FROM customers WHERE email = ?", "name@example.com").Scan(&yok)
+
+	//roomtype
+	Standard := RoomType{
+		Name:   "standard",
+		Detail: "เตียงคู่ 1 เตียง เข้าพักได้ 2 คน มีสิ่งอำนวยความสะดวก (เครื่องปรับอากาศ, น้ำอุ่น)",
+		Price:  500,
+	}
+	db.Model(&RoomType{}).Create(&Standard)
+
+	Deluxe := RoomType{
+		Name:   "Deluxe",
+		Detail: "เตียงขนาดกลาง 1 เตียง มองเห็นวิวทิวทัศนียภาพที่สวยงาม มีสิ่งอำนวยความสะดวก (เครื่องปรับอากาศ, น้ำอุ่น)",
+		Price:  1000,
+	}
+	db.Model(&RoomType{}).Create(&Deluxe)
+
+	Suite := RoomType{
+		Name:   "suite",
+		Detail: "เตียงขนาดใหญ่  1 เตียง มีห้องนั่งเล่น ห้องนอน มีสิ่งอำนวยความสะดวก (เครื่องปรับอากาศ, น้ำอุ่น, โซฟา, ตู้เย็น, โทรทัศน์)",
+		Price:  1500,
+	}
+	db.Model(&RoomType{}).Create(&Suite)
+
+	//Room Data
+	r1 := Room{
+		Roomnumber: "101",
+		Location:   "ZoneA ชั้น 1",
+	}
+	db.Model(&Room{}).Create(&r1)
+
+	r2 := Room{
+		Roomnumber: "201",
+		Location:   "ZoneB ชั้น 2",
+	}
+	db.Model(&Room{}).Create(&r2)
+
+	r3 := Room{
 		Roomnumber: "301",
-	})
-	db.Model(&Room{}).Create(&Room{
-		Location:   "3th",
-		Roomnumber: "302",
-	})
-	db.Model(&Room{}).Create(&Room{
-		Location:   "4th",
-		Roomnumber: "401",
-	})
-	db.Model(&Room{}).Create(&Room{
-		Location:   "4th",
-		Roomnumber: "402",
-	})
+		Location:   "ZoneA ชั้น 3",
+	}
+	db.Model(&Room{}).Create(&r3)
 
-	var room1 Room
-	var room2 Room
-	var room3 Room
-	var room4 Room
-	db.Raw("SELECT * FROM rooms WHERE roomnumber = ?", "401").Scan(&room1)
-	db.Raw("SELECT * FROM rooms WHERE roomnumber = ?", "402").Scan(&room2)
-	db.Raw("SELECT * FROM rooms WHERE roomnumber = ?", "301").Scan(&room3)
-	db.Raw("SELECT * FROM rooms WHERE roomnumber = ?", "302").Scan(&room4)
+	// Payment
+	p1 := Payment{
+		Method: "KTB",
+	}
+	db.Model(&Payment{}).Create(&p1)
 
-	// ===== สมมติ CheckIn =====
-	db.Model(&CheckIn{}).Create(&CheckIn{
-		Date_time: time.Now(),
-		Customer:  golden, // Customer object
-		Employee:  phupha,
-		Room:      room2, // Room Object
-	})
-	db.Model(&CheckIn{}).Create(&CheckIn{
-		Date_time: time.Now(),
-		Customer:  shepherd, // Customer object
-		Employee:  phupha,
-		Room:      room1, // Room Object
-	})
-	db.Model(&CheckIn{}).Create(&CheckIn{
-		Date_time: time.Now(),
-		Customer:  shepherd, // Customer object
-		Employee:  phupha,
-		Room:      room3, // Room Object
-	})
-	db.Model(&CheckIn{}).Create(&CheckIn{
-		Date_time: time.Now(),
-		Customer:  golden, // Customer object
-		Employee:  phupha,
-		Room:      room3, // Room Object
-	})
-	db.Model(&CheckIn{}).Create(&CheckIn{
-		Date_time: time.Now(),
-		Customer:  golden, // Customer object
-		Employee:  phupha,
-		Room:      room4, // Room Object
-	})
+	p2 := Payment{
+		Method: "SCB",
+	}
+	db.Model(&Payment{}).Create(&p2)
 
-	var check_in1 CheckIn
-	var check_in2 CheckIn
-	db.Raw("SELECT * FROM check_ins WHERE id = ?", 1).Scan(&check_in1)
-	db.Raw("SELECT * FROM check_ins WHERE id = ?", 2).Scan(&check_in2)
+	p3 := Payment{
+		Method: "TMB",
+	}
+	db.Model(&Payment{}).Create(&p3)
 
-	db.Model(&CheckOut{}).Create(&CheckOut{
-		CheckOutTime: time.Now(),
-		Customer:     golden,
-		Employee:     phupha,
-		CheckIn:      check_in1,
+	//reserve
+	//reserve 1
+	RS1 := Reservation{
+		DateAndTime: time.Now(),
+		People:      1,
+		Customer:    sam,
+		Room:        r1,
+		Payment:     p1,
+	}
+	//reserve 2
+	RS2 := Reservation{
+		DateAndTime: time.Now(),
+		People:      2,
+		Customer:    yok,
+		Room:        r2,
+		Payment:     p3,
+	}
+	//reserve 3
+	RS3 := Reservation{
+		DateAndTime: time.Now(),
+		People:      1,
+		Customer:    benz,
+		Room:        r2,
+		Payment:     p1,
+	}
+
+	db.Model(&Reservation{}).Create(&RS1)
+	db.Model(&Reservation{}).Create(&RS2)
+	db.Model(&Reservation{}).Create(&RS3)
+
+	//balance
+	B1 := Balance{
+		Type: "Full",
+	}
+	db.Model(&Balance{}).Create(&B1)
+
+	B2 := Balance{
+		Type: "Half",
+	}
+	db.Model(&Balance{}).Create(&B2)
+
+	// --- RoomPayment Data
+	RP1 := RoomPayment{
+		PaymentDate: time.Now(),
+		Amount:      600,
+		Recorder:    som,
+		Reservation: RS1,
+		Balance:     B2,
+	}
+	db.Model(&RoomPayment{}).Create(&RP1)
+
+	RP2 := RoomPayment{
+		PaymentDate: time.Now(),
+		Amount:      1200,
+	}
+	db.Model(&RoomPayment{}).Create(&RP2)
+
+	RP3 := RoomPayment{
+		PaymentDate: time.Now(),
+		Amount:      2400,
+	}
+	db.Model(&RoomPayment{}).Create(&RP3)
+
+	// ---  CheckIn data
+	CheckIntana1 := CheckIn{
+		DateTime:    time.Now(),
+		Customer:    benz,
+		Room:        r1,
+		RoomPayment: RP2,
+		Employee:    kluy,
+	}
+	db.Model(&CheckIn{}).Create(&CheckIntana1)
+
+	CheckIntana2 := CheckIn{
+		DateTime:    time.Now(),
+		Customer:    sam,
+		Room:        r2,
+		RoomPayment: RP1,
+		Employee:    som,
+	}
+	db.Model(&CheckIn{}).Create(&CheckIntana2)
+
+	CheckIntana3 := CheckIn{
+		DateTime:    time.Now(),
+		Customer:    yok,
+		Room:        r3,
+		RoomPayment: RP3,
+		Employee:    porn,
+	}
+	db.Model(&CheckIn{}).Create(&CheckIntana3)
+
+	// checkout data
+	CheckOuttana3 := CheckOut{
+		CheckIn:      CheckIntana3,
+		Employee:     som,
+		Customer:     yok,
+		CheckOutTime: time.Time{},
 		Condition:    "No damage",
+	}
+	db.Model(&CheckOut{}).Create(&CheckOuttana3)
+
+	// equipment data
+
+	equipdm := Equipment{
+		Name: "กระจกสำหรับแต่งตัว (Dressing mirror)",
+	}
+	db.Model(&Equipment{}).Create(&equipdm)
+
+	equipchair := Equipment{
+		Name: "เก้าอี้ (Chair)",
+	}
+	db.Model(&Equipment{}).Create(&equipchair)
+
+	equipwaterheater := Equipment{
+		Name: "เครื่องทำน้ำอุ่น (Water heater)",
+	}
+	db.Model(&Equipment{}).Create(&equipwaterheater)
+
+	equiplamp := Equipment{
+		Name: "โคมไฟ (Lamp)",
+	}
+	db.Model(&Equipment{}).Create(&equiplamp)
+
+	equipflushtoilet := Equipment{
+		Name: "ชักโครก (flush toilet)",
+	}
+	db.Model(&Equipment{}).Create(&equipflushtoilet)
+
+	equipbed := Equipment{
+		Name: "เตียงนอน (Bed)",
+	}
+	db.Model(&Equipment{}).Create(&equipbed)
+
+	equipfridge := Equipment{
+		Name: "ตู้เย็น (Fridge)",
+	}
+	db.Model(&Equipment{}).Create(&equipfridge)
+
+	equiptable := Equipment{
+		Name: "โต๊ะ (Table)",
+	}
+	db.Model(&Equipment{}).Create(&equiptable)
+
+	equipwardrobe := Equipment{
+		Name: "ตู้เสื้อผ้า (Wardrobe)",
+	}
+	db.Model(&Equipment{}).Create(&equipwardrobe)
+
+	equiptv := Equipment{
+		Name: "ทีวี (TV)",
+	}
+	db.Model(&Equipment{}).Create(&equiptv)
+
+	equipdoor := Equipment{
+		Name: "ประตู (Door)",
+	}
+	db.Model(&Equipment{}).Create(&equipdoor)
+
+	equipshower := Equipment{
+		Name: "ฝักบัว (Shower)",
+	}
+	db.Model(&Equipment{}).Create(&equipshower)
+
+	equipfan := Equipment{
+		Name: "พัดลม (Fan)",
+	}
+	db.Model(&Equipment{}).Create(&equipfan)
+
+	equipFluorescentlamp := Equipment{
+		Name: "หลอดฟลูออเรสเซนต์ (Fluorescent lamp)",
+	}
+	db.Model(&Equipment{}).Create(&equipFluorescentlamp)
+
+	equipac := Equipment{
+		Name: "แอร์ (Air conditioner)",
+	}
+	db.Model(&Equipment{}).Create(&equipac)
+
+	// problem data
+	prodefective := Problem{
+		Value: "ชำรุด (Defective)",
+	}
+	db.Model(&Problem{}).Create(&prodefective)
+
+	pronotwork := Problem{
+		Value: "ใช้งานไม่ได้ (Not working)",
+	}
+	db.Model(&Problem{}).Create(&pronotwork)
+
+	// urgency data
+	urgent := Urgency{
+		Value: "เร่งด่วน (Urgent)",
+	}
+	db.Model(&Urgency{}).Create(&urgent)
+
+	urfast := Urgency{
+		Value: "เร็ว (Fast)",
+	}
+	db.Model(&Urgency{}).Create(&urfast)
+
+	urmedium := Urgency{
+		Value: "ปานกลาง (Medium)",
+	}
+	db.Model(&Urgency{}).Create(&urmedium)
+
+	urslow := Urgency{
+		Value: "ช้า (Slow)",
+	}
+	db.Model(&Urgency{}).Create(&urslow)
+
+	urvslow := Urgency{
+		Value: "ช้ามากๆ (Vary slow)",
+	}
+	db.Model(&Urgency{}).Create(&urvslow)
+
+	// 1 repair
+	db.Model(&RepairInformation{}).Create(&RepairInformation{
+		CheckIn:   CheckIntana1,
+		Equipment: equipfridge,
+		Problem:   pronotwork,
+		Urgency:   urfast,
+		Datetime:  time.Now(),
 	})
-	db.Model(&CheckOut{}).Create(&CheckOut{
-		CheckOutTime: time.Now(),
-		Customer:     golden,
-		Employee:     phupha,
-		CheckIn:      check_in2,
-		Condition:    "No damage",
+
+	// 2 repair
+	db.Model(&RepairInformation{}).Create(&RepairInformation{
+		CheckIn:   CheckIntana2,
+		Equipment: equiptable,
+		Problem:   prodefective,
+		Urgency:   urmedium,
+		Datetime:  time.Now(),
 	})
+
+	// 3 repair
+	db.Model(&RepairInformation{}).Create(&RepairInformation{
+		CheckIn:   CheckIntana3,
+		Equipment: equipwardrobe,
+		Problem:   prodefective,
+		Urgency:   urslow,
+		Datetime:  time.Now(),
+	})
+
+	//status
+	available := Status{
+		Detail: "ว่าง",
+	}
+	db.Model(&Status{}).Create(&available)
+
+	noavailable := Status{
+		Detail: "ไม่ว่าง",
+	}
+	db.Model(&Status{}).Create(&noavailable)
+
+	//
+	// === Query
+	//
+
+	// var target Employee
+	// db.Model(&Employee{}).Find(&target, db.Where("email = ?", "chanwit@gmail.com"))
+
+	// var employeeLogin Employee
+	// db.Model(&Employee{}).Find(&employeeLogin, db.Where("email = ? and employee_id = ?", "พนักงานที่เข้าสู่ระบบ", target.ID))
+
+	/*var watchedList []*WatchVideo
+	db.Model(&WatchVideo{}).
+		Joins("Playlist").
+		Joins("Resolution").
+		Joins("Video").
+		Find(&watchedList, db.Where("playlist_id = ?", watchedPlaylist.ID))
+
+	for _, wl := range watchedList {
+		fmt.Printf("Watch Video: %v\n", wl.ID)
+		fmt.Printf("%v\n", wl.Playlist.Title)
+		fmt.Printf("%v\n", wl.Resolution.Value)
+		fmt.Printf("%v\n", wl.Video.Name)
+		fmt.Println("====")
+	}*/
 
 }
