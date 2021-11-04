@@ -5,9 +5,10 @@ import (
 
 	"github.com/BearishStaff/sa-64-example/entity"
 	"github.com/gin-gonic/gin"
+	"golang.org/x/crypto/bcrypt"
 )
 
-// POST /Customer
+// POST /customers
 func CreateCustomer(c *gin.Context) {
 	var customer entity.Customer
 	if err := c.ShouldBindJSON(&customer); err != nil {
@@ -15,37 +16,46 @@ func CreateCustomer(c *gin.Context) {
 		return
 	}
 
+	// เข้ารหัสลับรหัสผ่านที่ผู้ใช้กรอกก่อนบันทึกลงฐานข้อมูล
+	bytes, err := bcrypt.GenerateFromPassword([]byte(customer.Password), 14)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "error hashing password"})
+		return
+	}
+	customer.Password = string(bytes)
+
 	if err := entity.DB().Create(&customer).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
+
 	c.JSON(http.StatusOK, gin.H{"data": customer})
 }
 
-// GET /customer/:id
+// /customers/:id (benz)
+
 func GetCustomer(c *gin.Context) {
 	var customer entity.Customer
 	id := c.Param("id")
-	if err := entity.DB().Raw("SELECT * FROM customers WHERE id = ?", id).Find(&customer).Error; err != nil {
+	if err := entity.DB().Raw("SELECT * FROM customers WHERE id = ?", id).Scan(&customer).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"data": customer})
+}
+
+// GET /customers
+func ListCustomers(c *gin.Context) {
+	var customers []entity.Customer
+	if err := entity.DB().Raw("SELECT * FROM customers").Scan(&customers).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"data": customer})
+	c.JSON(http.StatusOK, gin.H{"data": customers})
 }
 
-// GET /customer
-func ListCustomer(c *gin.Context) {
-	var customer []entity.Customer
-	if err := entity.DB().Raw("SELECT * FROM customers").Find(&customer).Error; err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-
-	c.JSON(http.StatusOK, gin.H{"data": customer})
-}
-
-// DELETE /customer/:id
+// DELETE /customers/:id
 func DeleteCustomer(c *gin.Context) {
 	id := c.Param("id")
 	if tx := entity.DB().Exec("DELETE FROM customers WHERE id = ?", id); tx.RowsAffected == 0 {
@@ -56,7 +66,7 @@ func DeleteCustomer(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"data": id})
 }
 
-// PATCH /customer
+// PATCH /customers
 func UpdateCustomer(c *gin.Context) {
 	var customer entity.Customer
 	if err := c.ShouldBindJSON(&customer); err != nil {
@@ -65,7 +75,7 @@ func UpdateCustomer(c *gin.Context) {
 	}
 
 	if tx := entity.DB().Where("id = ?", customer.ID).First(&customer); tx.RowsAffected == 0 {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "customer not found"})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "customers not found"})
 		return
 	}
 

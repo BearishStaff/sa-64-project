@@ -31,6 +31,7 @@ import {
   KeyboardDateTimePicker,
 } from "@material-ui/pickers";
 import DateFnsUtils from "@date-io/date-fns";
+import { id } from "date-fns/locale";
 
 const Alert = (props: AlertProps) => {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -55,7 +56,7 @@ function CheckOutCreate() {
   const classes = useStyles();
   const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
   const [checkIns, setCheckIns] = useState<CheckInInterface[]>([]);
-  const [employees, setEmployees] = useState<EmployeeInterface[]>([]);
+  const [employees, setEmployees] = useState<EmployeeInterface>();
   const [customers, setCustomers] = useState<CustomerInterface[]>([]);
   const [rooms, setRooms] = useState<RoomInterface[]>([]);
   const [checkOut, setCheckOut] = useState<Partial<CheckOutInterface>>(
@@ -129,8 +130,8 @@ function CheckOutCreate() {
       });
   };
 
-  const getEmployees = async () => {
-    fetch(`${apiUrl}/employees`, requestOptions)
+  const getEmployees = async (id: Number) => {
+    fetch(`${apiUrl}/employees/${id}`, requestOptions)
       .then((response) => response.json())
       .then((res) => {
         if (res.data) {
@@ -156,7 +157,7 @@ function CheckOutCreate() {
   useEffect(() => {
     getCheckIns();
     getCustomers();
-    getEmployees();
+    getEmployees(Number(localStorage.getItem("uid")));
     getRooms();
   }, []);
 
@@ -169,7 +170,7 @@ function CheckOutCreate() {
     let data = {
       CheckInID: convertType(checkOut.CheckInID),
       CustomerID: convertType(checkOut.CustomerID),
-      EmployeeID: convertType(checkOut.EmployeeID),
+      EmployeeID: convertType(employees?.ID),
       CheckOutTime: selectedDate,
       Condition: checkOut.Condition ?? "",
     };
@@ -275,20 +276,22 @@ function CheckOutCreate() {
               <p>Checker: </p>
               <Select
                 native
+                disabled
                 value={checkOut.EmployeeID}
-                onChange={handleChange}
                 inputProps={{
                   name: "EmployeeID",
                 }}
               >
-                <option aria-label="None" value="">
-                  กรอกชื่อของคุณ
+                <option value={0}>
+                  {employees?.Name}
                 </option>
-                {employees.map((item: EmployeeInterface) => (
+
+                {/* {employees?.map((item: EmployeeInterface) => (
                   <option value={item.ID} key={item.ID}>
                     {item.Name}
                   </option>
-                ))}
+                ))} */}
+
               </Select>
             </FormControl>
           </Grid>

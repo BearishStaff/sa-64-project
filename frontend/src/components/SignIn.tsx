@@ -98,9 +98,7 @@ function SignIn() {
         </Avatar>
         <Typography component="h1" variant="h5">
           Sign in
-
         </Typography>
-        *username:bbb@gmail.com, password:123456*
         <form className={classes.form} noValidate>
           <TextField
             variant="outlined"

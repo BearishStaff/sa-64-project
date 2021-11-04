@@ -25,7 +25,7 @@ func main() {
 			protected.DELETE("/check_outs/:id", controller.DeleteCheckOut)
 
 			// CheckIn Routes
-			protected.GET("/check_ins", controller.ListCheckIn)
+			protected.GET("/check_ins", controller.ListCheckIns)
 			protected.GET("/check_ins/room", controller.ListCheckInRoom)
 			protected.GET("/check_ins/:id", controller.GetCheckIn)
 			protected.POST("/check_ins", controller.CreateCheckIn)
@@ -33,21 +33,21 @@ func main() {
 			protected.DELETE("/check_ins/:id", controller.DeleteCheckIn)
 
 			// Customer Routes
-			protected.GET("/customers", controller.ListCustomer)
+			protected.GET("/customers", controller.ListCustomers)
 			protected.GET("/customers/:id", controller.GetCustomer)
 			protected.POST("/customers", controller.CreateCustomer)
 			protected.PATCH("/customers", controller.UpdateCustomer)
 			protected.DELETE("/customers/:id", controller.DeleteCustomer)
 
 			// Employee Routes
-			protected.GET("/employees", controller.ListEmployee)
+			protected.GET("/employees", controller.ListEmployees)
 			protected.GET("/employees/:id", controller.GetEmployee)
 			protected.POST("/employees", controller.CreateEmployee)
 			protected.PATCH("/employees", controller.UpdateEmployee)
 			protected.DELETE("/employees/:id", controller.DeleteEmployee)
 
 			// Room Routes
-			protected.GET("/rooms", controller.ListRoom)
+			protected.GET("/rooms", controller.ListRooms)
 			protected.GET("/rooms/:id", controller.GetRoom)
 			protected.POST("/rooms", controller.CreateRoom)
 			protected.PATCH("/rooms", controller.UpdateRoom)

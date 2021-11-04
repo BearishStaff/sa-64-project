@@ -24,12 +24,9 @@ import ListItemText from "@material-ui/core/ListItemText";
 import Button from "@material-ui/core/Button";
 
 import HomeIcon from "@material-ui/icons/Home";
-import AccountCircleIcon from "@material-ui/icons/AccountCircle";
-import YouTubeIcon from "@material-ui/icons/YouTube";
 
 import CheckOutForm from "./components/CheckOutForm";
 import CheckOutPage from "./components/CheckOutPage";
-import Navbar from "./components/Navbar";
 import SignIn from "./components/SignIn";
 
 const drawerWidth = 240;
@@ -120,7 +117,6 @@ export default function MiniDrawer() {
 
   const menu = [
     { name: "Home", icon: <HomeIcon />, path: "/" },
-    { name: "CheckOut Form", icon: <AccountCircleIcon />, path: "/create" },
   ];
 
   useEffect(() => {

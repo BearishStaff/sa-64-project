@@ -5,15 +5,24 @@ import (
 
 	"github.com/BearishStaff/sa-64-example/entity"
 	"github.com/gin-gonic/gin"
+	"golang.org/x/crypto/bcrypt"
 )
 
-// POST /Employee
+// POST /employees
 func CreateEmployee(c *gin.Context) {
 	var employee entity.Employee
 	if err := c.ShouldBindJSON(&employee); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
+
+	// เข้ารหัสลับรหัสผ่านที่ผู้ใช้กรอกก่อนบันทึกลงฐานข้อมูล
+	bytes, err := bcrypt.GenerateFromPassword([]byte(employee.Password), 14)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "error hashing password"})
+		return
+	}
+	employee.Password = string(bytes)
 
 	if err := entity.DB().Create(&employee).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -26,7 +35,7 @@ func CreateEmployee(c *gin.Context) {
 func GetEmployee(c *gin.Context) {
 	var employee entity.Employee
 	id := c.Param("id")
-	if err := entity.DB().Raw("SELECT * FROM employees WHERE id = ?", id).Find(&employee).Error; err != nil {
+	if err := entity.DB().Raw("SELECT * FROM employees WHERE id = ?", id).Scan(&employee).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
@@ -34,18 +43,18 @@ func GetEmployee(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"data": employee})
 }
 
-// GET /employee
-func ListEmployee(c *gin.Context) {
-	var employee []entity.Employee
-	if err := entity.DB().Raw("SELECT * FROM employees").Find(&employee).Error; err != nil {
+// List /employees
+func ListEmployees(c *gin.Context) {
+	var employees []entity.Employee
+	if err := entity.DB().Raw("SELECT * FROM employees").Scan(&employees).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"data": employee})
+	c.JSON(http.StatusOK, gin.H{"data": employees})
 }
 
-// DELETE /employee/:id
+// DELETE /employees/:id
 func DeleteEmployee(c *gin.Context) {
 	id := c.Param("id")
 	if tx := entity.DB().Exec("DELETE FROM employees WHERE id = ?", id); tx.RowsAffected == 0 {
@@ -56,7 +65,7 @@ func DeleteEmployee(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"data": id})
 }
 
-// PATCH /employee
+// PATCH /employees
 func UpdateEmployee(c *gin.Context) {
 	var employee entity.Employee
 	if err := c.ShouldBindJSON(&employee); err != nil {
