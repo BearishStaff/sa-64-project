@@ -72,7 +72,7 @@ func SetupDatabase() {
 		Name:     "Phupha Bbbb",
 		Email:    "bbb@gmail.com",
 		Tel:      "0945333333",
-		Password: string(password), // password change
+		Password: string(password),
 	})
 
 	var porn Employee
@@ -127,34 +127,54 @@ func SetupDatabase() {
 
 	Deluxe := RoomType{
 		Name:   "Deluxe",
-		Detail: "เตียงขนาดกลาง 1 เตียง มองเห็นวิวทิวทัศนียภาพที่สวยงาม มีสิ่งอำนวยความสะดวก (เครื่องปรับอากาศ, น้ำอุ่น)",
+		Detail: "เตียงขนาดกลาง 1 เตียง เข้าพักได้ 2 คน มองเห็นวิวทิวทัศนียภาพที่สวยงาม ห้องพักขนาดกลาง",
 		Price:  1000,
 	}
 	db.Model(&RoomType{}).Create(&Deluxe)
 
 	Suite := RoomType{
 		Name:   "suite",
-		Detail: "เตียงขนาดใหญ่  1 เตียง มีห้องนั่งเล่น ห้องนอน มีสิ่งอำนวยความสะดวก (เครื่องปรับอากาศ, น้ำอุ่น, โซฟา, ตู้เย็น, โทรทัศน์)",
+		Detail: "เตียงขนาดใหญ่  1 เตียง  เข้าพักได้ 3 คน มีห้องนั่งเล่น ห้องนอน ห้องพักขนาดใหญ่",
 		Price:  1500,
 	}
 	db.Model(&RoomType{}).Create(&Suite)
 
-	//Room Data
+	//status
+	available := Status{
+		Detail: "ว่าง",
+	}
+	db.Model(&Status{}).Create(&available)
+
+	noavailable := Status{
+		Detail: "ไม่ว่าง",
+	}
+	db.Model(&Status{}).Create(&noavailable)
+
+	// ---  Room data
 	r1 := Room{
-		Roomnumber: "101",
+		Roomnumber: "A101",
 		Location:   "ZoneA ชั้น 1",
+		Type:       Standard,
+		Recorder:   kluy,
+		Status:     available,
 	}
 	db.Model(&Room{}).Create(&r1)
 
 	r2 := Room{
-		Roomnumber: "201",
+		Roomnumber: "B201",
 		Location:   "ZoneB ชั้น 2",
+		Type:       Deluxe,
+		Recorder:   kluy,
+		Status:     available,
 	}
 	db.Model(&Room{}).Create(&r2)
 
 	r3 := Room{
-		Roomnumber: "301",
+		Roomnumber: "A301",
 		Location:   "ZoneA ชั้น 3",
+		Type:       Suite,
+		Recorder:   kluy,
+		Status:     available,
 	}
 	db.Model(&Room{}).Create(&r3)
 
@@ -199,11 +219,17 @@ func SetupDatabase() {
 		Room:        r2,
 		Payment:     p1,
 	}
-
+	RS4 := Reservation{
+		DateAndTime: time.Now(),
+		People:      1,
+		Customer:    sam,
+		Room:        r1,
+		Payment:     p1,
+	}
 	db.Model(&Reservation{}).Create(&RS1)
 	db.Model(&Reservation{}).Create(&RS2)
 	db.Model(&Reservation{}).Create(&RS3)
-
+	db.Model(&Reservation{}).Create(&RS4)
 	//balance
 	B1 := Balance{
 		Type: "Full",
@@ -218,7 +244,7 @@ func SetupDatabase() {
 	// --- RoomPayment Data
 	RP1 := RoomPayment{
 		PaymentDate: time.Now(),
-		Amount:      600,
+		Amount:      250,
 		Recorder:    som,
 		Reservation: RS1,
 		Balance:     B2,
@@ -227,15 +253,39 @@ func SetupDatabase() {
 
 	RP2 := RoomPayment{
 		PaymentDate: time.Now(),
-		Amount:      1200,
+		Amount:      500,
+		Recorder:    porn,
+		Reservation: RS2,
+		Balance:     B2,
 	}
 	db.Model(&RoomPayment{}).Create(&RP2)
 
 	RP3 := RoomPayment{
 		PaymentDate: time.Now(),
-		Amount:      2400,
+		Amount:      1500,
+		Recorder:    kluy,
+		Reservation: RS3,
+		Balance:     B1,
 	}
 	db.Model(&RoomPayment{}).Create(&RP3)
+
+	RP4 := RoomPayment{
+		PaymentDate: time.Now(),
+		Amount:      1500,
+		Recorder:    kluy,
+		Reservation: RS4,
+		Balance:     B1,
+	}
+	db.Model(&RoomPayment{}).Create(&RP4)
+
+	RP5 := RoomPayment{
+		PaymentDate: time.Now(),
+		Amount:      500,
+		Recorder:    kluy,
+		Reservation: RS1,
+		Balance:     B1,
+	}
+	db.Model(&RoomPayment{}).Create(&RP5)
 
 	// ---  CheckIn data
 	CheckIntana1 := CheckIn{
@@ -265,6 +315,15 @@ func SetupDatabase() {
 	}
 	db.Model(&CheckIn{}).Create(&CheckIntana3)
 
+	CheckIntana4 := CheckIn{
+		DateTime:    time.Now(),
+		Customer:    sam,
+		Room:        r1,
+		RoomPayment: RP4,
+		Employee:    porn,
+	}
+	db.Model(&CheckIn{}).Create(&CheckIntana4)
+
 	// checkout data
 	CheckOuttana3 := CheckOut{
 		CheckIn:      CheckIntana3,
@@ -274,6 +333,15 @@ func SetupDatabase() {
 		Condition:    "No damage",
 	}
 	db.Model(&CheckOut{}).Create(&CheckOuttana3)
+
+	CheckOutemp := CheckOut{
+		CheckIn:      CheckIntana1,
+		Employee:     som,
+		Customer:     benz,
+		CheckOutTime: time.Time{},
+		Condition:    "No damage",
+	}
+	db.Model(&CheckOut{}).Create(&CheckOutemp)
 
 	// equipment data
 
@@ -291,6 +359,11 @@ func SetupDatabase() {
 		Name: "เครื่องทำน้ำอุ่น (Water heater)",
 	}
 	db.Model(&Equipment{}).Create(&equipwaterheater)
+
+	equipac := Equipment{
+		Name: "เครื่องปรับอากาศ (Air conditioner)",
+	}
+	db.Model(&Equipment{}).Create(&equipac)
 
 	equiplamp := Equipment{
 		Name: "โคมไฟ (Lamp)",
@@ -323,7 +396,7 @@ func SetupDatabase() {
 	db.Model(&Equipment{}).Create(&equipwardrobe)
 
 	equiptv := Equipment{
-		Name: "ทีวี (TV)",
+		Name: "โทรทัศน์ (television)",
 	}
 	db.Model(&Equipment{}).Create(&equiptv)
 
@@ -346,11 +419,6 @@ func SetupDatabase() {
 		Name: "หลอดฟลูออเรสเซนต์ (Fluorescent lamp)",
 	}
 	db.Model(&Equipment{}).Create(&equipFluorescentlamp)
-
-	equipac := Equipment{
-		Name: "แอร์ (Air conditioner)",
-	}
-	db.Model(&Equipment{}).Create(&equipac)
 
 	// problem data
 	prodefective := Problem{
@@ -415,41 +483,5 @@ func SetupDatabase() {
 		Urgency:   urslow,
 		Datetime:  time.Now(),
 	})
-
-	//status
-	available := Status{
-		Detail: "ว่าง",
-	}
-	db.Model(&Status{}).Create(&available)
-
-	noavailable := Status{
-		Detail: "ไม่ว่าง",
-	}
-	db.Model(&Status{}).Create(&noavailable)
-
-	//
-	// === Query
-	//
-
-	// var target Employee
-	// db.Model(&Employee{}).Find(&target, db.Where("email = ?", "chanwit@gmail.com"))
-
-	// var employeeLogin Employee
-	// db.Model(&Employee{}).Find(&employeeLogin, db.Where("email = ? and employee_id = ?", "พนักงานที่เข้าสู่ระบบ", target.ID))
-
-	/*var watchedList []*WatchVideo
-	db.Model(&WatchVideo{}).
-		Joins("Playlist").
-		Joins("Resolution").
-		Joins("Video").
-		Find(&watchedList, db.Where("playlist_id = ?", watchedPlaylist.ID))
-
-	for _, wl := range watchedList {
-		fmt.Printf("Watch Video: %v\n", wl.ID)
-		fmt.Printf("%v\n", wl.Playlist.Title)
-		fmt.Printf("%v\n", wl.Resolution.Value)
-		fmt.Printf("%v\n", wl.Video.Name)
-		fmt.Println("====")
-	}*/
 
 }

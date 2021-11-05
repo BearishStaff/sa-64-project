@@ -241,7 +241,7 @@ function CheckOutCreate() {
                   กรอกห้อง
                 </option>
                 {checkIns.map((item: CheckInInterface) => (
-                  <option value={item.ID} key={item.ID}>
+                  <option value={item.ID} key={item.Room.Roomnumber}>
                     {item.Room.Roomnumber}
                   </option>
                 ))}
@@ -264,7 +264,7 @@ function CheckOutCreate() {
                   กรอกชื่อลูกค้า
                 </option>
                 {customers.map((item: CustomerInterface) => (
-                  <option value={item.ID} key={item.ID}>
+                  <option value={item.ID} key={item.Name}>
                     {item.Name}
                   </option>
                 ))}
